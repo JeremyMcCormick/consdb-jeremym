@@ -5,8 +5,85 @@ topics:
   window: 0.0 # optional (sec)
   function: mean
   # other optional information
-# - name: lsst.sal.Some_other_topic
-#   fields: [ "field3" ]
-#   function: whatever
+- name: "lsst.sal.ATAOS.logevent_focusOffsetSummary"
+  fields: [ "total", "userApplied", "filter", "disperser", "wavelength"]
+  function: mean
+- name: "lsst.sal.ATDomeTrajectory.logevent_telescopeVignetted"
+  fields: ["vignetted", "azimuth", "shutter"]
+  function: mean
+- name: lsst.sal.ATMCS.measuredTorque
+  fields: ["elevationMotorTorque","azimuthMotor1Torque","azimuthMotor1Torque", "nasmyth1MotorTorque", "nasmyth2MotorTorque", "m3Torque"]
+  function: mean
+# Were any pointing system warnings triggered during the exposure?
+- name: lsst.sal.ATPtg.logevent_airmassWarning
+  fields: ["level"]
+  function: mean  
+- name: lsst.sal.ATPtg.logevent_azWrapWarning
+  fields: ["level"]
+  function: mean  
+- name: lsst.sal.ATPtg.logevent_blindSpotWarning
+  fields: ["level"]
+  function: mean  
+- name: lsst.sal.ATPtg.logevent_elLimitWarning
+  fields: ["level"]
+  function: mean  
+- name: lsst.sal.ATPtg.logevent_focusNameInconsistentWarning
+  fields: ["level"]
+  function: mean  
+- name: lsst.sal.ATPtg.logevent_moonProximityWarning
+  fields: ["level"]
+  function: mean  
+- name: lsst.sal.ATPtg.logevent_mountDataWarning
+  fields: ["level"]
+  function: mean  
+- name: lsst.sal.ATPtg.logevent_objectSetWarning
+  fields: ["level"]
+  function: mean  
+- name: lsst.sal.ATPtg.logevent_rotWrapWarning
+  fields: ["level"]
+  function: mean  
+- name: lsst.sal.ATPtg.logevent_sunProximityWarning
+  fields: ["level"]
+  function: mean  
+- name: lsst.sal.ATPtg.logevent_objectSetWarning
+  fields: ["level"]
+  function: mean  
+- name: lsst.sal.MTAOS.logevent_cameraHexapodCorrection
+  fields: ["x", "y", "z", "u", "v", "w"]
+  function: mean  
+# annularZernikeCoeff: array with z4-z22 terms of annular Zernike polynomials
+- name: lsst.sal.MTAOS.logevent_wavefrontError
+  fields: ["sensorId", "annularZernikeCoeff"]
+  function: mean  
+- name: lsst.sal.DIMM.logevent_dimmMeasurement
+  fields: ["fwhm"]
+  function: mean
+# pressureItem is an array of pressures
+- name: lsst.sal.ESS.pressure
+  fields: ["pressureItem"]
+  function: mean
+- name: lsst.sal.ESS.relativeHumidity
+  fields: ["relativeHumidityItem"]
+  function: mean
+# temperatureItem is an array of temperatures
+- name: lsst.sal.ESS.temperature
+  fields: ["temperatureItem"]
+  function: mean
+- name: lsst.sal.CCCamera.rebpower_RebTotalPower
+  fields: ["rebTotalPower"]
+  function: mean
+- name: lsst.sal.CCCamera.focal_plane_Ccd
+  fields: ["gDV", "oDV", "oGV", "rDV", "temp"]
+  function: mean
+- name: lsst.sal.CCCamera.focal_plane_Reb
+  fields: ["anaI", "anaV", "aspicl_Temp0", "aspicu_Temp0", "clkHI", "clkHV", "clkLI", "clkLV", "digI", "digV"] 
+  function: mean
 exposure_table: exposure
 visit_table: visit
+# topics with 404 error:  lsst.sal.WeatherStation.airPressure
+#                         lsst.sal.WeatherStation.airTemperature
+#                         lsst.sal.WeatherStation.relativeHumidity
+#                         lsst.sal.WeatherStation.windDirection
+# summit-latiss unidentifyed topics by @id:
+#                         "@id": "#ExposureEFD.Camera_alertRaised"                        
+#                         "@id": "#ExposureCcdEFD.Camera_oDI" (similar oGV exists in lsst.sal.CCCamera.focal_plane_Ccd)
