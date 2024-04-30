@@ -171,12 +171,34 @@ def build_argparser() -> argparse.ArgumentParser:
 
 
 def main() -> None:
+    print("----------- MAIN -----------")
     parser = build_argparser()
     args = parser.parse_args()
+
+    print("Butler:")
     butler = Butler(args.repo)
-    db = create_engine(args.db_conn_str)
-    efd = lsst_efd_client.EfdClient(args.efd_conn_str)
-    config = read_config(args.config_name)
-    process_interval(
-        butler, db, efd, config, args.instrument, args.start_time, args.end_time
-    )
+    print(butler)
+
+    # print("DB engine:")
+    # db = create_engine(args.db_conn_str)
+    # print(db)
+
+    # print("EFD:")
+    # efd = lsst_efd_client.EfdClient(args.efd_conn_str)
+    # print(efd)
+
+    # print("Configs:")   
+    # config = read_config(args.config_name)
+    # print(config)   
+
+    # process_interval(
+    #     butler, db, efd, config, args.instrument, args.start_time, args.end_time
+    # )
+
+
+if __name__ == "__main__":
+
+    # Exemplo de execução
+    # python transform_efd.py -i LATISS -s 2024-01-01T4:00:00  -e 2024-01-05T05:00:00 -r /repo/embargo -d sqlite://test.db -E usdf_efd -c test.yaml
+
+    main()
