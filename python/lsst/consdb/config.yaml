@@ -1,0 +1,11 @@
+topics:
+- name: lsst.sal.Some_topic
+  fields: [ "field1", "field2" ]
+  index: 103  # optional
+  function: mean
+  # other optional information
+- name: lsst.sal.Some_other_topic
+  fields: [ "field3" ]
+  function: whatever
+exposure_table: exposure
+visit_table: visit
