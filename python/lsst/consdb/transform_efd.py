@@ -78,11 +78,11 @@ async def get_efd_values(
         end.utc + window,
         topic.get("index", None),
     )
-
+    series.to_csv('.tmp/' + topic['name'] + '.csv')
     print(f"Topic: {topic['name']}")
-    print(f"Window: {window}")
-    print(f"Series: {len(series)}")
-    print(series)
+    # print(f"Window: {window}")
+    # print(f"Series: {len(series)}")
+    # print(series)
 
     return EfdValues(topic, window, series)
 
@@ -165,7 +165,7 @@ async def process_interval(
 
     for topic in config["topics"]:
         efd_values = await get_efd_values(efd, topic, min_topic_time, max_topic_time)
-        print(efd_values)
+        # print(efd_values)
 
 
 def build_argparser() -> argparse.ArgumentParser:
