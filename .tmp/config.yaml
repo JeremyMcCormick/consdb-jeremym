@@ -1,0 +1,12 @@
+topics:
+- name: lsst.sal.WeatherForecast.dailyTrend
+  fields: [ "private_efdStamp", "temperatureMax"]
+  index: 103  # optional
+  window: 0.0 # optional (sec)
+  function: mean
+  # other optional information
+# - name: lsst.sal.Some_other_topic
+#   fields: [ "field3" ]
+#   function: whatever
+exposure_table: exposure
+visit_table: visit
