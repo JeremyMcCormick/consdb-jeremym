@@ -105,6 +105,8 @@ def get_visits_by_period(butler: Butler, instrument: str, start: astropy.time.Ti
         bind=dict(instr=instrument)
     ).limit(limit)
 
+def butler_query_results_to_pandas(query):
+    return pandas.DataFrame([q.toDict() for q in query])
 
 async def process_interval(
     butler: Butler,
