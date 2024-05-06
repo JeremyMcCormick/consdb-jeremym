@@ -17,44 +17,44 @@ topics:
 # Were any pointing system warnings triggered during the exposure?
 - name: lsst.sal.ATPtg.logevent_airmassWarning
   fields: ["level"]
-  function: mean  
+  function: mean
 - name: lsst.sal.ATPtg.logevent_azWrapWarning
   fields: ["level"]
-  function: mean  
+  function: mean
 - name: lsst.sal.ATPtg.logevent_blindSpotWarning
   fields: ["level"]
-  function: mean  
+  function: mean
 - name: lsst.sal.ATPtg.logevent_elLimitWarning
   fields: ["level"]
-  function: mean  
+  function: mean
 - name: lsst.sal.ATPtg.logevent_focusNameInconsistentWarning
   fields: ["level"]
-  function: mean  
+  function: mean
 - name: lsst.sal.ATPtg.logevent_moonProximityWarning
   fields: ["level"]
-  function: mean  
+  function: mean
 - name: lsst.sal.ATPtg.logevent_mountDataWarning
   fields: ["level"]
-  function: mean  
+  function: mean
 - name: lsst.sal.ATPtg.logevent_objectSetWarning
   fields: ["level"]
-  function: mean  
+  function: mean
 - name: lsst.sal.ATPtg.logevent_rotWrapWarning
   fields: ["level"]
-  function: mean  
+  function: mean
 - name: lsst.sal.ATPtg.logevent_sunProximityWarning
   fields: ["level"]
-  function: mean  
+  function: mean
 - name: lsst.sal.ATPtg.logevent_objectSetWarning
   fields: ["level"]
-  function: mean  
+  function: mean
 - name: lsst.sal.MTAOS.logevent_cameraHexapodCorrection
   fields: ["x", "y", "z", "u", "v", "w"]
-  function: mean  
+  function: mean
 # annularZernikeCoeff: array with z4-z22 terms of annular Zernike polynomials
 - name: lsst.sal.MTAOS.logevent_wavefrontError
   fields: ["sensorId", "annularZernikeCoeff"]
-  function: mean  
+  function: mean
 - name: lsst.sal.DIMM.logevent_dimmMeasurement
   fields: ["fwhm"]
   function: mean
@@ -76,7 +76,7 @@ topics:
   fields: ["gDV", "oDV", "oGV", "rDV", "temp"]
   function: mean
 - name: lsst.sal.CCCamera.focal_plane_Reb
-  fields: ["anaI", "anaV", "aspicl_Temp0", "aspicu_Temp0", "clkHI", "clkHV", "clkLI", "clkLV", "digI", "digV"] 
+  fields: ["anaI", "anaV", "aspicl_Temp0", "aspicu_Temp0", "clkHI", "clkHV", "clkLI", "clkLV", "digI", "digV"]
   function: mean
 exposure_table: exposure
 visit_table: visit
@@ -85,5 +85,5 @@ visit_table: visit
 #                         lsst.sal.WeatherStation.relativeHumidity
 #                         lsst.sal.WeatherStation.windDirection
 # summit-latiss unidentifyed topics by @id:
-#                         "@id": "#ExposureEFD.Camera_alertRaised"                        
+#                         "@id": "#ExposureEFD.Camera_alertRaised"
 #                         "@id": "#ExposureCcdEFD.Camera_oDI" (similar oGV exists in lsst.sal.CCCamera.focal_plane_Ccd)

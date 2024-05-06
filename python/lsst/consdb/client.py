@@ -1,9 +1,10 @@
 import os
-from pandas import DataFrame
-import requests
-from requests.exceptions import RequestException
 from typing import Any, Iterable
 from urllib.parse import urljoin
+
+import requests
+from pandas import DataFrame
+from requests.exceptions import RequestException
 
 session = requests.Session()
 base_url = os.environ["CONSDB_URL"]

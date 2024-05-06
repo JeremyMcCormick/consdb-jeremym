@@ -1,13 +1,14 @@
 import argparse
-from typing import TYPE_CHECKING, Any, Callable, Optional
+import asyncio
+from typing import Any, Callable, Optional
 
 import astropy.time
 import lsst_efd_client
 import pandas
 import yaml
 from lsst.daf.butler import Butler, DimensionRecord
-from sqlalchemy import create_engine, Engine
-import asyncio
+from sqlalchemy import Engine, create_engine
+
 
 class Summary:
     # TODO define summary
@@ -50,9 +51,7 @@ class Records:
     def __init__(self, db: Engine):
         self._db = db
 
-    def add(
-        self, dim: DimensionRecord, topic: dict[str, Any], summary: Any
-    ) -> None:
+    def add(self, dim: DimensionRecord, topic: dict[str, Any], summary: Any) -> None:
         pass
 
     def write(self, table: str) -> None:
@@ -78,7 +77,7 @@ async def get_efd_values(
         end.utc + window,
         topic.get("index", None),
     )
-    series.to_csv('.tmp/' + topic['name'] + '.csv')
+    series.to_csv(".tmp/" + topic["name"] + ".csv")
     print(f"Topic: {topic['name']}")
     # print(f"Window: {window}")
     # print(f"Series: {len(series)}")
@@ -87,26 +86,41 @@ async def get_efd_values(
     return EfdValues(topic, window, series)
 
 
-def get_exposures_by_period(butler: Butler, instrument: str, start: astropy.time.Time, end: astropy.time.Time, limit: Optional[int] = None):
+def get_exposures_by_period(
+    butler: Butler,
+    instrument: str,
+    start: astropy.time.Time,
+    end: astropy.time.Time,
+    limit: Optional[int] = None,
+):
 
-    where_clause = f"instrument=instr and exposure.timespan OVERLAPS (T'{start}', T'{end}')"
+    where_clause = (
+        f"instrument=instr and exposure.timespan OVERLAPS (T'{start}', T'{end}')"
+    )
     return butler.registry.queryDimensionRecords(
-        "exposure", 
-        where=where_clause,
-        bind=dict(instr=instrument)
+        "exposure", where=where_clause, bind=dict(instr=instrument)
     ).limit(limit)
 
-def get_visits_by_period(butler: Butler, instrument: str, start: astropy.time.Time, end: astropy.time.Time, limit: Optional[int] = None):
 
-    where_clause = f"instrument=instr and visit.timespan OVERLAPS (T'{start}', T'{end}')"
+def get_visits_by_period(
+    butler: Butler,
+    instrument: str,
+    start: astropy.time.Time,
+    end: astropy.time.Time,
+    limit: Optional[int] = None,
+):
+
+    where_clause = (
+        f"instrument=instr and visit.timespan OVERLAPS (T'{start}', T'{end}')"
+    )
     return butler.registry.queryDimensionRecords(
-        "visit", 
-        where=where_clause,
-        bind=dict(instr=instrument)
+        "visit", where=where_clause, bind=dict(instr=instrument)
     ).limit(limit)
+
 
 def butler_query_results_to_pandas(query):
     return pandas.DataFrame([q.toDict() for q in query])
+
 
 async def process_interval(
     butler: Butler,
@@ -118,7 +132,7 @@ async def process_interval(
     end_time: str,
 ) -> None:
 
-    print(f"Process Interval")   
+    print("Process Interval")
 
     start = astropy.time.Time(start_time, format="isot")
     end = astropy.time.Time(end_time, format="isot")
@@ -135,19 +149,18 @@ async def process_interval(
         if record.timespan.end < end:
             exposure_list.append(record)
             min_topic_time = min(record.timespan.begin, min_topic_time)
-            max_topic_time = max(record.timespan.begin, max_topic_time)        
+            max_topic_time = max(record.timespan.begin, max_topic_time)
 
     for record in get_visits_by_period(butler, instrument, start, end, limit=10):
         if record.timespan.end < end:
             visit_list.append(record)
             min_topic_time = min(record.timespan.begin, min_topic_time)
-            max_topic_time = max(record.timespan.begin, max_topic_time)        
+            max_topic_time = max(record.timespan.begin, max_topic_time)
 
     print(f"Exposures: {len(exposure_list)}")
     print(f"Visits: {len(visit_list)}")
     print(f"Min Topic time: {min_topic_time}")
     print(f"Max Topic time: {max_topic_time}")
-
 
     # exposure_records = Records(db)
     # print("Exposure Records:")
@@ -167,7 +180,7 @@ async def process_interval(
 
     for topic in config["topics"]:
         efd_values = await get_efd_values(efd, topic, min_topic_time, max_topic_time)
-        # print(efd_values)
+        print(efd_values)
 
 
 def build_argparser() -> argparse.ArgumentParser:
@@ -192,7 +205,14 @@ def build_argparser() -> argparse.ArgumentParser:
         required=True,
         help="end time (ISO, YYYY-MM-DDTHH:MM:SS)",
     )
-    parser.add_argument("-r", "--repo", dest="repo", default="/repo/embargo", required=True, help="Butler repo")
+    parser.add_argument(
+        "-r",
+        "--repo",
+        dest="repo",
+        default="/repo/embargo",
+        required=True,
+        help="Butler repo",
+    )
     parser.add_argument(
         "-d",
         "--db",
@@ -202,7 +222,12 @@ def build_argparser() -> argparse.ArgumentParser:
         help="Consolidated Database connection string",
     )
     parser.add_argument(
-        "-E", "--efd", dest="efd_conn_str", default="usdf_efd", required=True, help="EFD connection string"
+        "-E",
+        "--efd",
+        dest="efd_conn_str",
+        default="usdf_efd",
+        required=True,
+        help="EFD connection string",
     )
     return parser
 
@@ -222,7 +247,7 @@ async def main() -> None:
     print(f"EFD: {efd}")
 
     config = read_config(args.config_name)
-    # print(f"Configs: {config}")   
+    # print(f"Configs: {config}")
 
     await process_interval(
         butler, db, efd, config, args.instrument, args.start_time, args.end_time
@@ -234,4 +259,3 @@ if __name__ == "__main__":
     # Exemplo de execução
     # python transform_efd.py -i LATISS -s 2024-01-01T4:00:00  -e 2024-01-05T05:00:00 -r /repo/embargo -d sqlite://test.db -E usdf_efd -c test.yaml
     asyncio.run(main())
-    

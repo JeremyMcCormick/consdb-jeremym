@@ -161,7 +161,7 @@ def process_column(column_def: str | Sequence, info: dict) -> Any:
         The value to use for the column.
         None if any input value is missing.
     """
-    if type(column_def) is str:
+    if isinstance(column_def, str):
         if column_def in info:
             return info[column_def]
     elif type(column_def) is tuple:
