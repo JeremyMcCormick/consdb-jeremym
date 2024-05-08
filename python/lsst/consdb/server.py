@@ -3,7 +3,9 @@ from flask import Flask, request
 from sqlalchemy import MetaData, create_engine
 
 app = Flask(__name__)
-engine = create_engine("postgresql://usdf-butler.slac.stanford.edu:5432/lsstdb1")
+engine = create_engine(
+    "postgresql://usdf-butler.slac.stanford.edu:5432/lsstdb1"
+)
 metadata_obj = MetaData(schema="cdb_latiss")
 metadata_obj.reflect(engine)
 
@@ -34,10 +36,15 @@ def query():
     if "where" in info:
         where = "WHERE " + info["where"]
         if ";" in where:
-            return ("Cannot create query containing more than one statement", 403)
+            return (
+                "Cannot create query containing more than one statement",
+                403,
+            )
     with engine.begin() as conn:
         try:
-            cursor = conn.exec_driver_sql(f"SELECT {columns} FROM {tables} {where}")
+            cursor = conn.exec_driver_sql(
+                f"SELECT {columns} FROM {tables} {where}"
+            )
             first = True
             result = []
             for row in cursor:
@@ -53,5 +60,6 @@ def query():
 @app.get("/schema/<table>")
 def schema(table: str):
     return [
-        (c.name, str(c.type), c.doc) for c in metadata_obj.tables[table.lower()].columns
+        (c.name, str(c.type), c.doc)
+        for c in metadata_obj.tables[table.lower()].columns
     ]

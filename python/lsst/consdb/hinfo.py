@@ -297,7 +297,8 @@ if host and passwd and user and dbname:
     pg_url = f"postgresql://{user}:{passwd}@{host}/{dbname}"
 else:
     pg_url = os.environ.get(
-        "POSTGRES_URL", "postgresql://usdf-butler.slac.stanford.edu:5432/lsstdb1"
+        "POSTGRES_URL",
+        "postgresql://usdf-butler.slac.stanford.edu:5432/lsstdb1",
     )
     logging.info(f"Using POSTGRES_URL {user} {host} {dbname}")
 engine = create_engine(pg_url)
@@ -310,7 +311,9 @@ if bucket_prefix:
     os.environ["LSST_DISABLE_BUCKET_VALIDATION"] = "1"
 
 
-topic = f"lsst.sal.{TOPIC_MAPPING[instrument]}.logevent_largeFileObjectAvailable"
+topic = (
+    f"lsst.sal.{TOPIC_MAPPING[instrument]}.logevent_largeFileObjectAvailable"
+)
 
 
 #################
@@ -345,7 +348,9 @@ async def main() -> None:
         logging.info("Consumer started")
         try:
             async for msg in consumer:
-                message = (await deserializer.deserialize(msg.value))["message"]
+                message = (await deserializer.deserialize(msg.value))[
+                    "message"
+                ]
                 logging.debug(f"Received message {message}")
                 url = message["url"]
                 # Replace local HTTP access URL with generic S3 access URL.
