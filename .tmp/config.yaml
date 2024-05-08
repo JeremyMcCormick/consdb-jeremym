@@ -1,31 +1,29 @@
 
 columns:
   - name: ATAOS_focusOffsetSummary_total
-    type: double
     function: mean
-    window: 0.0
     topics:
       -
-        topic: lsst.sal.ATAOS.logevent_focusOffsetSummary
+        name: lsst.sal.ATAOS.logevent_focusOffsetSummary
         fields: ["total"]
+        window: 0.0
 
-  - name: ATAOS_focusOffsetSummary_userApplied
-    type: double
-    function: mean
-    window: 0.0
-    topics:
-      -
-        topic: lsst.sal.ATAOS.logevent_focusOffsetSummary
-        fields: ["userApplied"]
+  # - name: ATAOS_focusOffsetSummary_userApplied
+  #   function: mean
+  #   topics:
+  #     -
+  #       topic: lsst.sal.ATAOS.logevent_focusOffsetSummary
+  #       fields: ["userApplied"]
+  #       window: 0.0
 
-  - name: ATAOS_focusOffsetSummary_filter
-    type: double
-    function: mean
-    window: 0.0
-    topics:
-      -
-        topic: lsst.sal.ATAOS.logevent_focusOffsetSummary
-        fields: ["filter"]
+  # - name: ATAOS_focusOffsetSummary_filter
+  #   function: mean
+  #   topics:
+  #     -
+  #       topic: lsst.sal.ATAOS.logevent_focusOffsetSummary
+  #       fields: ["filter"]
+  #       window: 0.0
+
 
 # Exemplo retorna 0 Rows
   # - name: ESS_pressure
@@ -36,18 +34,6 @@ columns:
   #     -
   #       topic: lsst.sal.ESS.pressure
   #       fields: ["pressureItem"]
-
-
-# Coleta de dados EFD
-# Substituir por uma função que agregue os topicos e fields no config columns.
-topics:
-- name: "lsst.sal.ATAOS.logevent_focusOffsetSummary"
-  fields: [ "total", "userApplied", "filter", "disperser", "wavelength"]
-  window: 0.0 # optional (sec)
-
-# - name: "lsst.sal.ESS.pressure"
-#   fields: [ "pressureItem",]
-#   window: 0.0 # optional (sec)
 
 # topics:
 #   # other optional information
