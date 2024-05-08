@@ -157,6 +157,33 @@ def get_visits_by_period(
 def butler_query_results_to_pandas(query):
     return pandas.DataFrame([q.toDict() for q in query])
 
+def get_topic_correponding_indexes(butler_table: pandas.DataFrame, topic_time_array: Callable[[list],numpy.ndarray]) -> List:
+    """
+    Returns a list of topic indexes corresponding to each row in the butler_table. It is assumed that the butler_table and the topic_time_array are sorted in time ascending order.
+
+    Parameters:
+    - butler_table (pandas.DataFrame): The input DataFrame containing the butler table.
+    - topic_time_array (Callable[[list],numpy.ndarray]): A callable function that returns an array of topic timespans.
+
+    Returns:
+    - indexes (List): A list of lists, where each inner list contains the topic indexes corresponding to a row in the butler_table.
+    """
+    indexes = []
+    topic_index, max_topic_index = 0, len(topic_time_array)
+        
+    # iterate over each butler_table row to find the corresponding
+    # topic indexes to later perform tranformations
+    for index, row in butler_table.iterrows():
+        topic_indexes = []
+        # always checks first max_topic_index as failsafe
+        while (topic_index < max_topic_index) and (topic_time_array[topic_index] < row.timespan.begin):
+            topic_index += 1
+        while (topic_index < max_topic_index) and (topic_time_array[topic_index] < row.timespan.end):
+            topic_indexes.append(topic_index)
+            topic_index += 1
+        indexes.append(topic_indexes)
+    return indexes
+
 def proccess_column(column, data, begin, end):
 
     # print(column)
