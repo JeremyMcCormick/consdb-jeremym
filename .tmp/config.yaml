@@ -45,9 +45,9 @@ topics:
   fields: [ "total", "userApplied", "filter", "disperser", "wavelength"]
   window: 0.0 # optional (sec)
 
-- name: "lsst.sal.ESS.pressure"
-  fields: [ "pressureItem",]
-  window: 0.0 # optional (sec)
+# - name: "lsst.sal.ESS.pressure"
+#   fields: [ "pressureItem",]
+#   window: 0.0 # optional (sec)
 
 # topics:
 #   # other optional information
