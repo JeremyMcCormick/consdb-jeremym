@@ -1,6 +1,6 @@
 import argparse
 import asyncio
-from typing import Any, Callable, Optional, Union
+from typing import Any, Callable, Optional, Union, List
 
 import astropy.time
 import lsst_efd_client
