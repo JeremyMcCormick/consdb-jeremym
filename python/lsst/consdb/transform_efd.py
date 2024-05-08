@@ -265,7 +265,7 @@ def get_visits_by_period(
 def butler_query_results_to_pandas(query):
     return pandas.DataFrame([q.toDict() for q in query])
 
-def get_topic_correponding_indexes(butler_table: pandas.DataFrame, topic_time_array: Union[[list],numpy.ndarray]) -> List:
+def get_topic_correponding_indexes(butler_table: pandas.DataFrame, topic_time_array: Union[List,numpy.ndarray]) -> List:
     """
     Returns a list of topic indexes corresponding to each row in the butler_table. It is assumed that the butler_table and the topic_time_array are sorted in time ascending order.
 
