@@ -3,9 +3,7 @@ from flask import Flask, request
 from sqlalchemy import MetaData, create_engine
 
 app = Flask(__name__)
-engine = create_engine(
-    "postgresql://usdf-butler.slac.stanford.edu:5432/lsstdb1"
-)
+engine = create_engine("postgresql://usdf-butler.slac.stanford.edu:5432/lsstdb1")
 metadata_obj = MetaData(schema="cdb_latiss")
 metadata_obj.reflect(engine)
 
@@ -42,9 +40,7 @@ def query():
             )
     with engine.begin() as conn:
         try:
-            cursor = conn.exec_driver_sql(
-                f"SELECT {columns} FROM {tables} {where}"
-            )
+            cursor = conn.exec_driver_sql(f"SELECT {columns} FROM {tables} {where}")
             first = True
             result = []
             for row in cursor:
@@ -59,7 +55,4 @@ def query():
 
 @app.get("/schema/<table>")
 def schema(table: str):
-    return [
-        (c.name, str(c.type), c.doc)
-        for c in metadata_obj.tables[table.lower()].columns
-    ]
+    return [(c.name, str(c.type), c.doc) for c in metadata_obj.tables[table.lower()].columns]

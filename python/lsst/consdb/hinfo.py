@@ -227,9 +227,7 @@ def process_date(day_obs: str) -> None:
     global TOPIC_MAPPING, bucket_prefix, instrument
 
     date = "/".join(day_obs.split("-"))
-    d = ResourcePath(
-        f"s3://{bucket_prefix}rubinobs-lfa-cp/{TOPIC_MAPPING[instrument]}/header/{date}/"
-    )
+    d = ResourcePath(f"s3://{bucket_prefix}rubinobs-lfa-cp/{TOPIC_MAPPING[instrument]}/header/{date}/")
     for dirpath, dirnames, filenames in d.walk():
         for fname in filenames:
             process_resource(d.join(fname))
@@ -311,9 +309,7 @@ if bucket_prefix:
     os.environ["LSST_DISABLE_BUCKET_VALIDATION"] = "1"
 
 
-topic = (
-    f"lsst.sal.{TOPIC_MAPPING[instrument]}.logevent_largeFileObjectAvailable"
-)
+topic = f"lsst.sal.{TOPIC_MAPPING[instrument]}.logevent_largeFileObjectAvailable"
 
 
 #################
@@ -327,9 +323,7 @@ async def main() -> None:
 
     kafka_config = get_kafka_config()
     async with httpx.AsyncClient() as client:
-        schema_registry = kafkit.registry.httpx.RegistryApi(
-            http_client=client, url=kafka_config.schema_url
-        )
+        schema_registry = kafkit.registry.httpx.RegistryApi(http_client=client, url=kafka_config.schema_url)
         deserializer = kafkit.registry.Deserializer(registry=schema_registry)
 
         consumer = aiokafka.AIOKafkaConsumer(
@@ -348,9 +342,7 @@ async def main() -> None:
         logging.info("Consumer started")
         try:
             async for msg in consumer:
-                message = (await deserializer.deserialize(msg.value))[
-                    "message"
-                ]
+                message = (await deserializer.deserialize(msg.value))["message"]
                 logging.debug(f"Received message {message}")
                 url = message["url"]
                 # Replace local HTTP access URL with generic S3 access URL.

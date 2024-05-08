@@ -18,13 +18,11 @@ class Summary:
 
 class Transform:
     """
-    A class that performs various transformations on a list or numpy 
+    A class that performs various transformations on a list or numpy
     array of values.
     """
 
-    def __init__(
-        self, values: Union[List[Union[float, int, bool]], numpy.ndarray]
-    ):
+    def __init__(self, values: Union[List[Union[float, int, bool]], numpy.ndarray]):
         """
         Initialize the Transform object.
 
@@ -102,11 +100,9 @@ class Transform:
         """
         return numpy.logical_not(self.values)
 
-    def logical_xor(
-        self, other_values: Union[List[Union[float, int, bool]], numpy.ndarray]
-    ) -> numpy.ndarray:
+    def logical_xor(self, other_values: Union[List[Union[float, int, bool]], numpy.ndarray]) -> numpy.ndarray:
         """
-        Perform element-wise logical XOR operation between the values 
+        Perform element-wise logical XOR operation between the values
         and other values.
 
         Args:
@@ -134,18 +130,14 @@ class Transform:
 # TODO add all summarizing functions
 def gen_mean(
     config: dict[str, Any]
-) -> Callable[
-    [pandas.DataFrame, astropy.time.Time, astropy.time.Time], Summary
-]:
+) -> Callable[[pandas.DataFrame, astropy.time.Time, astropy.time.Time], Summary]:
     def do(
         series: pandas.DataFrame,
         start: astropy.time.Time,
         end: astropy.time.Time,
     ) -> Summary:
 
-        df = series.loc[
-            (series.index > str(start)) & (series.index <= str(end))
-        ]
+        df = series.loc[(series.index > str(start)) & (series.index <= str(end))]
 
         # print(df)
         # print(df.info(verbose=True))
@@ -153,9 +145,7 @@ def gen_mean(
         # TODO aqui aplicaria a funcao de media no dataframe
         # TODO: Como aplicar a função quando houver mais de uma coluna?
         result = df[df.columns[0]].mean()
-        print(
-            f"Sumary: {start} -> {end} Column: {df.columns[0]} Count: {len(df)} Result: {result}"
-        )
+        print(f"Sumary: {start} -> {end} Column: {df.columns[0]} Count: {len(df)} Result: {result}")
 
         return result
         # return Summary()
@@ -177,12 +167,8 @@ class EfdValues:
         self._sum_function = FUNCTION_GENERATORS[config["function"]](config)
         self._window = astropy.time.TimeDelta(window, format="sec")
 
-    def summarize(
-        self, start: astropy.time.Time, end: astropy.time.Time
-    ) -> Any:
-        return self._sum_function(
-            self._entries, start.utc - self._window, end.utc + self._window
-        )
+    def summarize(self, start: astropy.time.Time, end: astropy.time.Time) -> Any:
+        return self._sum_function(self._entries, start.utc - self._window, end.utc + self._window)
 
 
 class Records:
@@ -190,9 +176,7 @@ class Records:
         self._db = db
         self.rows = []
 
-    def add(
-        self, dim: DimensionRecord, topic: dict[str, Any], summary: Any
-    ) -> None:
+    def add(self, dim: DimensionRecord, topic: dict[str, Any], summary: Any) -> None:
 
         # new_row = dim.toDict()
         pass
@@ -227,7 +211,7 @@ async def get_efd_values(
     # print(series.dtypes)
 
     # TODO: Fazendo um resample e interpolate Provisório.
-    # Somente para simular que existe mais de uma mensagem 
+    # Somente para simular que existe mais de uma mensagem
     # por periodo da exposição
     # e permitir que seja feito a sumarização.
     series = series.resample("1s", origin=series.index[0]).mean()
@@ -253,9 +237,7 @@ def get_exposures_by_period(
             "exposure", where=where_clause, bind=dict(instr=instrument)
         ).limit(limit)
 
-    return butler.registry.queryDimensionRecords(
-        "exposure", where=where_clause, bind=dict(instr=instrument)
-    )
+    return butler.registry.queryDimensionRecords("exposure", where=where_clause, bind=dict(instr=instrument))
 
 
 def get_visits_by_period(
@@ -266,18 +248,14 @@ def get_visits_by_period(
     limit: Optional[int] = None,
 ):
 
-    where_clause = (
-        f"instrument=instr and visit.timespan OVERLAPS (T'{start}', T'{end}')"
-    )
+    where_clause = f"instrument=instr and visit.timespan OVERLAPS (T'{start}', T'{end}')"
 
     if limit is not None:
         return butler.registry.queryDimensionRecords(
             "visit", where=where_clause, bind=dict(instr=instrument)
         ).limit(limit)
 
-    butler.registry.queryDimensionRecords(
-        "visit", where=where_clause, bind=dict(instr=instrument)
-    )
+    butler.registry.queryDimensionRecords("visit", where=where_clause, bind=dict(instr=instrument))
 
 
 def butler_query_results_to_pandas(query):
@@ -307,13 +285,9 @@ def get_topic_correponding_indexes(
     for index, row in butler_table.iterrows():
         topic_indexes = []
         # always checks first max_topic_index as failsafe
-        while (topic_index < max_topic_index) and (
-            topic_time_array[topic_index] < row.timespan.begin
-        ):
+        while (topic_index < max_topic_index) and (topic_time_array[topic_index] < row.timespan.begin):
             topic_index += 1
-        while (topic_index < max_topic_index) and (
-            topic_time_array[topic_index] < row.timespan.end
-        ):
+        while (topic_index < max_topic_index) and (topic_time_array[topic_index] < row.timespan.end):
             topic_indexes.append(topic_index)
             topic_index += 1
         indexes.append(topic_indexes)
@@ -405,9 +379,7 @@ async def process_interval(
     # Get data for all Topics and fields
     datalake = {}
     for topic in config["topics"]:
-        efd_series = await get_efd_values(
-            efd, topic, min_topic_time, max_topic_time
-        )
+        efd_series = await get_efd_values(efd, topic, min_topic_time, max_topic_time)
         datalake[topic["name"]] = efd_series
     # print(datalake)
 
@@ -452,12 +424,8 @@ async def process_interval(
 
 
 def build_argparser() -> argparse.ArgumentParser:
-    parser = argparse.ArgumentParser(
-        description="Summarize EFD topics in a time range"
-    )
-    parser.add_argument(
-        "-c", "--config", dest="config_name", required=True, help="config YAML"
-    )
+    parser = argparse.ArgumentParser(description="Summarize EFD topics in a time range")
+    parser.add_argument("-c", "--config", dest="config_name", required=True, help="config YAML")
     parser.add_argument(
         "-i",
         "--instrument",
