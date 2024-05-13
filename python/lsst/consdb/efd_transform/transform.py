@@ -2,6 +2,7 @@ from typing import List, Optional, Union
 
 import numpy
 
+
 class Transform:
     """
     A class that performs various transformations on a list or numpy
@@ -20,6 +21,22 @@ class Transform:
         """
         self.values = numpy.array(values)
 
+    def apply(self, method_name: str) -> Union[float, None]:
+        """
+        Apply a transformation method specified by method_name.
+
+        Args:
+            method_name: Name of the method to apply.
+
+        Returns:
+            The result of the transformation method or None if the method is not found.
+        """
+        method = getattr(self, method_name, None)
+        if method:
+            return method()
+        else:
+            return None
+
     def mean(self) -> float:
         """
         Calculate the mean of the values.
@@ -27,6 +44,9 @@ class Transform:
         Returns:
             The mean value as a float.
         """
+        if numpy.size(self.values) == 0:
+            return numpy.nan
+
         return numpy.nanmean(self.values)
 
     def std(self, ddof: Optional[int] = 1) -> float:
@@ -48,6 +68,9 @@ class Transform:
         Returns:
             The maximum value as a float, int, or bool.
         """
+        if numpy.size(self.values) == 0:
+            return numpy.nan
+
         return numpy.nanmax(self.values)
 
     def min(self) -> Union[float, int, bool]:
@@ -57,6 +80,9 @@ class Transform:
         Returns:
             The minimum value as a float, int, or bool.
         """
+        if numpy.size(self.values) == 0:
+            return numpy.nan
+
         return numpy.nanmin(self.values)
 
     def logical_and(self) -> Union[bool, numpy.ndarray]:

@@ -6,34 +6,76 @@ columns:
       -
         name: lsst.sal.ATAOS.logevent_focusOffsetSummary
         fields: ["total"]
-        window: 0.0
 
-  # - name: ATAOS_focusOffsetSummary_userApplied
-  #   function: mean
-  #   topics:
-  #     -
-  #       topic: lsst.sal.ATAOS.logevent_focusOffsetSummary
-  #       fields: ["userApplied"]
-  #       window: 0.0
+  - name: ATPtg_warning
+    function: mean
+    topics:
+      -
+        name: lsst.sal.ATPtg.logevent_airmassWarning
+        fields: ["level"]
+      -
+        name: lsst.sal.ATPtg.logevent_moonProximityWarning
+        fields: ["level"]
+      -
+        name: lsst.sal.ATPtg.logevent_mountDataWarning
+        fields: ["level"]
+      # -
+      #   name: lsst.sal.ATPtg.logevent_azWrapWarning
+      #   fields: ["level"]
+      # -
+      #   name: lsst.sal.ATPtg.logevent_blindSpotWarning
+      #   fields: ["level"]
+      # -
+      #   name: lsst.sal.ATPtg.logevent_elLimitWarning
+      #   fields: ["level"]
+      # -
+      #   name: lsst.sal.ATPtg.logevent_focusNameInconsistentWarning
+      #   fields: ["level"]
+      # -
+      #   name: lsst.sal.ATPtg.logevent_objectSetWarning
+      #   fields: ["level"]
+      # -
+      #   name: lsst.sal.ATPtg.logevent_rotWrapWarning
+      #   fields: ["level"]
+      # -
+      #   name: lsst.sal.ATPtg.logevent_sunProximityWarning
+      #   fields: ["level"]
+      # -
+      #   name: lsst.sal.ATPtg.logevent_objectSetWarning
+      #   fields: ["level"]
 
-  # - name: ATAOS_focusOffsetSummary_filter
-  #   function: mean
-  #   topics:
-  #     -
-  #       topic: lsst.sal.ATAOS.logevent_focusOffsetSummary
-  #       fields: ["filter"]
-  #       window: 0.0
+  - name: ATAOS_focusOffsetSummary_userApplied
+    function: min
+    topics:
+      -
+        name: lsst.sal.ATAOS.logevent_focusOffsetSummary
+        fields: ["userApplied"]
 
+  - name: ATAOS_focusOffsetSummary_filter
+    function: max
+    topics:
+      -
+        name: lsst.sal.ATAOS.logevent_focusOffsetSummary
+        fields: ["filter"]
 
-# Exemplo retorna 0 Rows
-  # - name: ESS_pressure
-  #   type: double
-  #   function: mean
-  #   window: 0.0
-  #   topics:
-  #     -
-  #       topic: lsst.sal.ESS.pressure
-  #       fields: ["pressureItem"]
+  - name: ATAOS_focusOffsetSummary_userApplied_min
+    function: min
+    topics:
+      -
+        name: lsst.sal.ATAOS.logevent_focusOffsetSummary
+        fields: ["userApplied"]
+  - name: ATAOS_focusOffsetSummary_userApplied_mean
+    function: mean
+    topics:
+      -
+        name: lsst.sal.ATAOS.logevent_focusOffsetSummary
+        fields: ["userApplied"]
+  - name: ATAOS_focusOffsetSummary_userApplied_max
+    function: max
+    topics:
+      -
+        name: lsst.sal.ATAOS.logevent_focusOffsetSummary
+        fields: ["userApplied"]
 
 # topics:
 #   # other optional information
