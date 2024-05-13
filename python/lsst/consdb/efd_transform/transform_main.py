@@ -70,6 +70,14 @@ class TransformMain:
                 # "timespan": exposure['timespan'],
             }
 
+        result_vis = {}
+        for visit in visits:
+            result_vis[visit["id"]] = {
+                "visit_id": visit["id"],
+                "instrument": instrument,
+                # "timespan": exposure['timespan'],
+            }
+
         # self.log.info(result_exp)
 
         # Iterates over the columns defined in the config.
@@ -92,23 +100,31 @@ class TransformMain:
 
                 result_exp[exposure["id"]][column["name"]] = column_value
 
-            # for visit in visits:
-            #     column_value = self.proccess_column_value(
-            #         start_time=visit['timespan'].begin,
-            #         end_time=visit['timespan'].end,
-            #         topics = topics,
-            #         transform_function=column['function']
-            #     )
+            for visit in visits:
+                column_value = self.proccess_column_value(
+                    start_time=visit['timespan'].begin,
+                    end_time=visit['timespan'].end,
+                    topics = topics,
+                    transform_function=column['function']
+                )
 
-            #     result_exp[visit['id']][column['name']] = column_value
+                result_vis[visit['id']][column['name']] = column_value
 
         results = []
         for result_row in result_exp:
             results.append(result_exp[result_row])
 
-        df = pandas.DataFrame(results[35:45])
-        # self.log.info(df)
-        print(df)
+        df_exposures = pandas.DataFrame(results[35:45])
+        print(df_exposures)
+
+
+        results = []
+        for result_row in result_vis:
+            results.append(result_vis[result_row])
+
+        df_visits = pandas.DataFrame(results[35:45])
+        print(df_visits)
+
 
     def proccess_column_value(
         self, start_time: astropy.time.Time, end_time: astropy.time.Time, topics, transform_function
