@@ -9,7 +9,7 @@ from lsst.daf.butler import Butler
 from efd_transform.butler_dao import ButlerDao
 from efd_transform.aggregate import Aggregate
 from sqlalchemy import Engine
-
+import sqlite3
 
 class Transform:
     """
@@ -89,7 +89,7 @@ class Transform:
         for exposure in exposures:
             result_exp[exposure["id"]] = {
                 "exposure_id": exposure["id"],
-                "instrument": instrument,
+                #"instrument": instrument,
                 # "timespan": exposure['timespan'],
             }
 
@@ -97,7 +97,7 @@ class Transform:
         for visit in visits:
             result_vis[visit["id"]] = {
                 "visit_id": visit["id"],
-                "instrument": instrument,
+                #"instrument": instrument,
                 # "timespan": exposure['timespan'],
             }
 
@@ -138,17 +138,42 @@ class Transform:
             results.append(result_exp[result_row])
 
         df_exposures = pandas.DataFrame(results[35:45])
+        #df_exposures = pandas.DataFrame(results)
         print(df_exposures)
 
+        self.to_db(df_exposures)
+       
+        # results = []
+        # for result_row in result_vis:
+        #    results.append(result_vis[result_row])
 
-        results = []
-        for result_row in result_vis:
-            results.append(result_vis[result_row])
+        # df_visits = pandas.DataFrame(results[35:45])
+        # print(df_visits)
 
-        df_visits = pandas.DataFrame(results[35:45])
-        print(df_visits)
+    def to_db(self, df):
+        from sqlalchemy import create_engine
 
+        engine = create_engine('sqlite:///.tmp/test.db')
+        df.to_sql('ExposureEFD', con=engine, if_exists='append', index=False)
+        #self.log.debug(engine)
+        #with engine.connect() as conn:
+            #self.log.debug(conn)
+            #df.drop(df.index, inplace=True)
+            #df.to_sql('ExposureEFD', con=engine, if_exists='append', index=False)
 
+            #conn.commit()
+        #def postgres_upsert(table, conn, keys, data_iter):
+            #from sqlalchemy.dialects.postgresql import insert
+
+            #data = [dict(zip(keys, row)) for row in data_iter]
+
+            #insert_statement = insert(table.table).values(data)
+            #upsert_statement = insert_statement.on_conflict_do_update(
+            #constraint=f"{table.table.name}_pkey",
+            #set_={c.key: c for c in insert_statement.excluded},
+            #)
+            #conn.execute(upsert_statement)
+    
     def proccess_column_value(
         self, start_time: astropy.time.Time, end_time: astropy.time.Time, topics, transform_function
     ):

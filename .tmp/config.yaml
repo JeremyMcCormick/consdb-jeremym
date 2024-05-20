@@ -58,24 +58,24 @@ columns:
         name: lsst.sal.ATAOS.logevent_focusOffsetSummary
         fields: ["filter"]
 
-  - name: ATAOS_focusOffsetSummary_userApplied_min
-    function: min
-    topics:
-      -
-        name: lsst.sal.ATAOS.logevent_focusOffsetSummary
-        fields: ["userApplied"]
-  - name: ATAOS_focusOffsetSummary_userApplied_mean
-    function: mean
-    topics:
-      -
-        name: lsst.sal.ATAOS.logevent_focusOffsetSummary
-        fields: ["userApplied"]
-  - name: ATAOS_focusOffsetSummary_userApplied_max
-    function: max
-    topics:
-      -
-        name: lsst.sal.ATAOS.logevent_focusOffsetSummary
-        fields: ["userApplied"]
+#  - name: ATAOS_focusOffsetSummary_userApplied_min
+#    function: min
+#    topics:
+#      -
+#        name: lsst.sal.ATAOS.logevent_focusOffsetSummary
+#        fields: ["userApplied"]
+#  - name: ATAOS_focusOffsetSummary_userApplied_mean
+#    function: mean
+#    topics:
+#      -
+#        name: lsst.sal.ATAOS.logevent_focusOffsetSummary
+#        fields: ["userApplied"]
+#  - name: ATAOS_focusOffsetSummary_userApplied_max
+#    function: max
+#    topics:
+#      -
+#        name: lsst.sal.ATAOS.logevent_focusOffsetSummary
+#        fields: ["userApplied"]
 
 # topics:
 #   # other optional information
