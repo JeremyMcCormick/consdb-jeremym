@@ -11,7 +11,7 @@ import logging
 import sys
 from pathlib import Path
 import astropy.time
-from python.lsst.consdb.efd_transform.transform import Transform
+from efd_transform.transform import Transform
 
 def get_logger(path: str, debug: bool=True) -> logging.Logger:
     """

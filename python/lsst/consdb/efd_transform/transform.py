@@ -7,7 +7,7 @@ import numpy
 import pandas
 from lsst.daf.butler import Butler
 from efd_transform.butler_dao import ButlerDao
-from python.lsst.consdb.efd_transform.aggregate import Aggregate
+from efd_transform.aggregate import Aggregate
 from sqlalchemy import Engine
 
 
