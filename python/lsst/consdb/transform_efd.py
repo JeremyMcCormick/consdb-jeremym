@@ -1,25 +1,25 @@
 import argparse
 import asyncio
-from typing import Any
-
-import lsst_efd_client
-import yaml
-from lsst.daf.butler import Butler
-from sqlalchemy import create_engine
-
 import logging
 import sys
 from pathlib import Path
-import astropy.time
-from efd_transform.transform import Transform
+from typing import Any
 
-def get_logger(path: str, debug: bool=True) -> logging.Logger:
+import astropy.time
+import lsst_efd_client
+import yaml
+from efd_transform.transform import Transform
+from lsst.daf.butler import Butler
+from sqlalchemy import create_engine
+
+
+def get_logger(path: str, debug: bool = True) -> logging.Logger:
     """
     Create and configure a logger object.
 
     Args:
         path (str): The path to the log file.
-        debug (bool, optional): Flag indicating whether to enable debug mode. 
+        debug (bool, optional): Flag indicating whether to enable debug mode.
         Defaults to True.
 
     Returns:
@@ -55,14 +55,8 @@ def build_argparser() -> argparse.ArgumentParser:
     Returns:
         argparse.ArgumentParser: The argument parser object.
     """
-    parser = argparse.ArgumentParser(
-        description="Summarize EFD topics in a time range")
-    parser.add_argument(
-        "-c", 
-        "--config", 
-        dest="config_name", 
-        required=True, 
-        help="config YAML")
+    parser = argparse.ArgumentParser(description="Summarize EFD topics in a time range")
+    parser.add_argument("-c", "--config", dest="config_name", required=True, help="config YAML")
     parser.add_argument(
         "-i",
         "--instrument",
@@ -119,6 +113,7 @@ def build_argparser() -> argparse.ArgumentParser:
 
     return parser
 
+
 def read_config(config_name: str) -> dict[str, Any]:
     """
     Reads a configuration file and returns its contents as a dictionary.
@@ -132,12 +127,13 @@ def read_config(config_name: str) -> dict[str, Any]:
     with open(config_name, "r") as f:
         return yaml.safe_load(f)
 
+
 async def main() -> None:
     """
     Entry point of the program.
-    
-    This function performs the main logic of the program, including parsing 
-    command line arguments, setting up logging, creating necessary objects, 
+
+    This function performs the main logic of the program, including parsing
+    command line arguments, setting up logging, creating necessary objects,
     and processing the specified time interval.
     """
     parser = build_argparser()
@@ -148,19 +144,14 @@ async def main() -> None:
 
     butler = Butler(args.repo)
 
-    db = create_engine(args.db_conn_str)
+    # db = create_engine(args.db_conn_str)
+    db_uri = args.db_conn_str
 
     efd = lsst_efd_client.EfdClient(args.efd_conn_str)
 
     config = read_config(args.config_name)
 
-    tm = Transform(
-        butler=butler,
-        db=db,
-        efd=efd,
-        config=config,
-        logger=log
-    )
+    tm = Transform(butler=butler, db_uri=db_uri, efd=efd, config=config, logger=log)
 
     start_time = astropy.time.Time(args.start_time, format="isot")
     end_time = astropy.time.Time(args.end_time, format="isot")
@@ -175,12 +166,12 @@ async def main() -> None:
 if __name__ == "__main__":
 
     # Execution example
-    # python transform_efd.py 
-    # -i LATISS 
-    # -s 2024-01-01T4:00:00  
-    # -e 2024-01-05T05:00:00 
-    # -r /repo/embargo 
-    # -d sqlite://test.db 
+    # python transform_efd.py
+    # -i LATISS
+    # -s 2024-01-01T4:00:00
+    # -e 2024-01-05T05:00:00
+    # -r /repo/embargo
+    # -d sqlite://test.db
     # -E usdf_efd -c test.yaml
     # -l $PWD/.tmp/transform.log
     asyncio.run(main())
