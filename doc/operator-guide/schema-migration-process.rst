@@ -3,22 +3,22 @@ Schema Migration Process
 ########################
 
 * How to add columns to sdm_schemas
-edit the repository at <link to sdm_schemas>
+edit the repository at https://sdm-schemas.lsst.io/
 check that valid sql tables can be created with felis
+create a ticket and assign it to Valerie to create a schema migration (do we have a diff migration request process)
 
 * Create an Alembic Migration
-  <link to alembic>
+  https://alembic.sqlalchemy.org/en/latest/front.html
   Alembic keeps track of our versioning so we can keep the test stands and summit databases in sync. Alembic helps to
-  autogenerate the code to move from one version to the next. Versioning our changes to the database schema in this way
-  helps us quickly apply schema edits and move the database's status forward and backward in time, dependent on issues and
-   upgrades.
+  autogenerate the code to move from one version to the next, and back if needed. Versioning our changes to the database schema in this way
+  helps us quickly apply schema edits and move the database's status forward and backward in time, dependent on issues and upgrades.
 
   * How to create an alembic migration to create a db version that includes your new sdm_schema edits
     We have created a script to aid with the generation of alembic migrations: consdb/alembic-autogenerate.py
     To use this script, you will need to have some local environment variables set.
 
-    Have a local clone of sdm_schemas that includes your cdb_* schema changes. Set the environment variable ???
-    SDM_SCHEMA to point to this repository so our autogenerate_alembic.py script will be able to reference the appropriate target schema configuration.
+    Have a local clone of sdm_schemas that includes your cdb_* schema changes. Set the environment variable SDM_SCHEMAS_DIR 
+    to point to this repository so our autogenerate_alembic.py script will be able to reference the appropriate target schema configuration.
 
     You must have access to the database you want to create a new version on. This access can be defined through setting
     the database url environment variable (is it DB_URL or POSTGRES_URL)
@@ -43,7 +43,7 @@ check that valid sql tables can be created with felis
   database `alembic upgrade head -n <database name>`. The database names are cdb_latiss, cdb_* and otherwise noted
   <link to existing db tables in intro page>
   Once both the new consdb software is deployed (hinfo, pqserver) and the database tables have been updated, we can test by taking an image with LATISS.
-  Access LOVE via `<teststand>/love` and use the 1Password admin information to sign in. Navigate to the ATQueue or Auxilary Telescope (AuxTel) Script Queue.
+  Access LOVE via `<teststand>/love` and use the 1Password admin information to sign in. Navigate to the ATQueue or Auxillary Telescope (AuxTel) Script Queue.
   See <links for using script queue and tts> for guidelines on using the test stands.
   Before editing these scripts, note their starting configurations, as we will return the configuration to that when we are done.
   Take a test/simulated picture with LATISS through the ATQueue using these three scripts:
