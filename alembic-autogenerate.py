@@ -5,7 +5,7 @@
 # 1. Load the LSST environment and setup sdm_schemas and felis.
 #        source loadLSST.bash or activate your eups setup
 #        setup felis
-#        setup -r /path/to/your/local/sdm_schemas
+#        setup -r /path/to/sdm_schemas -- SDM_SCHEMAS_DIR could hopefully just work
 # 2. From the root of the consdb git repo, invoke the script. Supply a
 #    revision message as the command line argument:
 #        python alembic-autogenerate.py this is my revision message "\n" \
@@ -44,6 +44,7 @@ alembic_ini_path = "alembic.ini"
 # Loop over each of the instruments
 pattern = os.environ["SDM_SCHEMAS_DIR"] + "/yml/cdb_*.yaml"
 instruments = [re.search(r"cdb_(.+)\.yaml$", file).group(1) for file in glob.glob(pattern)]
+instruments = []  # you can just hard code the few we want
 for instrument in instruments:
     # Set up a temporary PostgreSQL instance using testing.postgresql
     with setup_postgres_test_db() as instance:
