@@ -27,8 +27,6 @@ Schema Migration Process
     2. Use the script ``consdb/alembic-autogenerate.py`` to generate Alembic migrations. You’ll need the following environment variables:
 
        - ``SDM_SCHEMAS_DIR`` - Points to a local clone of ``sdm_schemas`` with your ``cdb_*`` schema changes.
-       - ``POSTGRES_URL`` - Defines database URL including authentication, e.g., ``"postgresql://DB_NAME:DB_PASS@postgresdb01.tu.lsst.org/DB_NAME"``.
-         .. note: or 'postgresdb01.ls.lsst.org' or something else depending on the location of the db you're trying to access
 
     3. Run ``alembic-autogenerate`` to create version files in respective database-named directories in ``consdb``.
 
