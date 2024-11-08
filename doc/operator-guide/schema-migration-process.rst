@@ -7,10 +7,11 @@ Schema Migration Process
   - Edit the repository at https://sdm-schemas.lsst.io/ to apply your schema changes to any of the ``cdb_*.yml`` schemas.
   - Check that valid SQL tables can be created with ``felis`` (https://felis.lsst.io/user-guide/cli.html#felis-validate) using:
 
-    ```
+  .. code-block:: bash
+
     pip install lsst-felis
+
     felis validate [options] [edited cdb_*.yml files]
-    ```
 
   - Create a Jira ticket and assign it to Valerie to create a schema migration. (Is there a separate migration request process?)
 
@@ -30,7 +31,7 @@ Schema Migration Process
 
     3. Run ``alembic-autogenerate`` to create version files in respective database-named directories in ``consdb``.
 
-     - Follow the directions in the header of the script.
+       - Follow the directions in the header of the script.
 
     4. Manually edit the generated files in ``consdb/alembic/<table-name>/`` to:
 
@@ -43,31 +44,31 @@ Schema Migration Process
 
   1. Update the deployment on the test stand:
 
-    Choose the appropriate test stand (TTS, BTS)
-    Create a branch in ``phalanx`` and edit the corresponding test stand environment file ``phalanx/applications/consdb/values-<test stand>.yaml`` to point to your branch.
-    Coordinate and announce in the appropriate slack channel that you will begin testing your migrations.
-    Update the consdb deployment in ``<url.to.teststand>/argo-cd`` to use your ``phalanx`` branch in the ``Target Revision``. Refresh and check pod logs.
-    Verify the tables that you will be upgrading exist using ``psql``
-    From the ``consdb/`` directory, (where ``alembic.ini`` file is) use the alembic commands to upgrade the existing database tables: ``alembic upgrade head -n <database name>``
-    Deploy new consdb software (``hinfo``, ``pqserver``) and check the initial logs.
+     Choose the appropriate test stand (TTS, BTS)
+     Create a branch in ``phalanx`` and edit the corresponding test stand environment file ``phalanx/applications/consdb/values-<test stand>.yaml`` to point to your branch.
+     Coordinate and announce in the appropriate slack channel that you will begin testing your migrations.
+     Update the consdb deployment in ``<url.to.teststand>/argo-cd`` to use your ``phalanx`` branch in the ``Target Revision``. Refresh and check pod logs.
+     Verify the tables that you will be upgrading exist using ``psql``
+     From the ``consdb/`` directory, (where ``alembic.ini`` file is) use the alembic commands to upgrade the existing database tables: ``alembic upgrade head -n <database name>``
+     Deploy new consdb software (``hinfo``, ``pqserver``) and check the initial logs.
 
   2. Test with LATISS imaging in ATQueue:
 
-    - Access LOVE via ``<url.to.teststand>/love`` and use the 1Password admin information to sign in, or your SLAC username and password.
-    - Navigate to the ATQueue or Auxillary Telescope (AuxTel) Script Queue.
-    - See (TTS Start Guide)[https://rubinobs.atlassian.net/wiki/spaces/LSSTCOM/pages/53739987/Tucson+Test+Stand+Start+Guide] for guidelines on using the test stands.
-    - Before editing these scripts, note their starting configurations, as we will return the configuration to that when we are done.
-    - Take a test/simulated picture with LATISS through the ATQueue using these three scripts:
+     - Access LOVE via ``<url.to.teststand>/love`` and use the 1Password admin information to sign in, or your SLAC username and password.
+     - Navigate to the ATQueue or Auxillary Telescope (AuxTel) Script Queue.
+     - See (TTS Start Guide)[https://rubinobs.atlassian.net/wiki/spaces/LSSTCOM/pages/53739987/Tucson+Test+Stand+Start+Guide] for guidelines on using the test stands.
+     - Before editing these scripts, note their starting configurations, as we will return the configuration to that when we are done.
+     - Take a test/simulated picture with LATISS through the ATQueue using these three scripts:
 
-      1. ``set_summary_state.py`` Change the configuration to enable ATHeaderService and ATCamera.
-      2. ``enable_latiss.py`` Remove any existing configuration.
-      3. ``take_image_latiss.py`` Update the configuration to remove anything that is not 'nimages' (1) and 'image_type' (ENGTEST)
+       1. ``set_summary_state.py`` Change the configuration to enable ATHeaderService and ATCamera.
+       2. ``enable_latiss.py`` Remove any existing configuration.
+       3. ``take_image_latiss.py`` Update the configuration to remove anything that is not 'nimages' (1) and 'image_type' (ENGTEST)
 
-    - Once you have put these three scripts in the queue, click ``run``.
-    - Watch for errors in the Script Queue and the ``argo-cd`` ``consdb`` pod logs and ``hinfo-latiss`` deployment.
-    - Address any errors and retest.
-    - Check the database by using ``psql`` commands like ``\dt`` to display the table names and maybe even ``SELECT * from cdb_latiss.exposure where day_obs == <YYYYMMDD>;`` to view the most recent data.
-    - If you have encountered errors in this process, do not proceed to the summit, but address those errors and retest them with your ``phalanx`` branch pointing to your ``consdb`` branch with the updates that fix the errors.
+     - Once you have put these three scripts in the queue, click ``run``.
+     - Watch for errors in the Script Queue and the ``argo-cd`` ``consdb`` pod logs and ``hinfo-latiss`` deployment.
+     - Address any errors and retest.
+     - Check the database by using ``psql`` commands like ``\dt`` to display the table names and maybe even ``SELECT * from cdb_latiss.exposure where day_obs == <YYYYMMDD>;`` to view the most recent data.
+     - If you have encountered errors in this process, do not proceed to the summit, but address those errors and retest them with your ``phalanx`` branch pointing to your ``consdb`` branch with the updates that fix the errors.
 
 
   - If tests are successful, create a pull request for the Alembic migration in ``consdb``. Tag the release according to ``standards-practices`` guidelines.
@@ -75,24 +76,24 @@ Schema Migration Process
 
 * Deploy migration in synchrony at Summit (if necessary), USDF, and Prompt Release (if necessary)
 
-     What is prompt release?
+      What is prompt release?
 
 * Deploy code to populate at Summit and/or USDF
 
-    Follow the testing steps above for testing alembic migration and code at TTS/BTS, before the you consider deploying at the summit.
+     Follow the testing steps above for testing alembic migration and code at TTS/BTS, before the you consider deploying at the summit.
 
-    The steps to deploy at the summit mirror the steps to test on a test stand with coordination and permission from the observers and site teams.
-    Access to argo-cd deployments is available via the Summit OpenVPN.
-    To coordinate your deployment update on the summit, you must attend Coordination Activities Planning (CAP) meeting on Tuesday mornings and announce your request.
+     The steps to deploy at the summit mirror the steps to test on a test stand with coordination and permission from the observers and site teams.
+     Access to argo-cd deployments is available via the Summit OpenVPN.
+     To coordinate your deployment update on the summit, you must attend Coordination Activities Planning (CAP) meeting on Tuesday mornings and announce your request.
 
-      - Add it to the agenda here: https://rubinobs.atlassian.net/wiki/spaces/LSSTCOM/pages/53765933/Agenda+Items+for+Future+CAP+Meetings
+       - Add it to the agenda here: https://rubinobs.atlassian.net/wiki/spaces/LSSTCOM/pages/53765933/Agenda+Items+for+Future+CAP+Meetings
 
-    The CAP members may tell you a time frame that is acceptable for you to perform these changes.
+     The CAP members may tell you a time frame that is acceptable for you to perform these changes.
 
-      - They may also tell you specific people to coordinate with to help you take images to test LATISS and LSSTCOMCAMSIM tables. There will be more tables to test eventually.
-      - Some important channels to note: #rubinobs-test-planning; #summit-announce; #summit-auxtel, https://obs-ops.lsst.io/Communications/slack-channel-usage.html.
+       - They may also tell you specific people to coordinate with to help you take images to test LATISS and LSSTCOMCAMSIM tables. There will be more tables to test eventually.
+       - Some important channels to note: #rubinobs-test-planning; #summit-announce; #summit-auxtel, https://obs-ops.lsst.io/Communications/slack-channel-usage.html.
 
-    When you get your final approval and designated time to perform the changes to ConsDb, announce on #summit-announce, and follow similar steps as test stand procedure above.
+     When you get your final approval and designated time to perform the changes to ConsDb, announce on #summit-announce, and follow similar steps as test stand procedure above.
 
 * Summit Deployment Steps
 
@@ -101,5 +102,6 @@ Schema Migration Process
   3. Refresh the consdb application and review pod logs.
   4. Have an image taken with the observing team, then verify database entries with a SQL query or Jupyter notebook.
   5. Check your new entries in the database using a jupyter notebook or SQL query in RSP showing your new image has been inserted to the database as expected.
+
 
   - Once deployment succeeds, set the ``Target Revision`` in ``argo-cd`` back to ``main`` and complete the ``phalanx`` PR for the tested ``consdb`` tag.
