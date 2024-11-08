@@ -84,8 +84,11 @@ Schema Migration Process
     The steps to deploy at the summit mirror the steps to test on a test stand with coordination and permission from the observers and site teams.
     Access to argo-cd deployments is available via the Summit OpenVPN.
     To coordinate your deployment update on the summit, you must attend Coordination Activities Planning (CAP) meeting on Tuesday mornings and announce your request.
+
       - Add it to the agenda here: https://rubinobs.atlassian.net/wiki/spaces/LSSTCOM/pages/53765933/Agenda+Items+for+Future+CAP+Meetings
+
     The CAP members may tell you a time frame that is acceptable for you to perform these changes.
+
       - They may also tell you specific people to coordinate with to help you take images to test LATISS and LSSTCOMCAMSIM tables. There will be more tables to test eventually.
       - Some important channels to note: #rubinobs-test-planning; #summit-announce; #summit-auxtel, https://obs-ops.lsst.io/Communications/slack-channel-usage.html.
 

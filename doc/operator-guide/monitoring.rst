@@ -22,4 +22,4 @@ Monitoring
 
 - Other issues
   - K8s infrastructure died The ConsDB team can verify that that is the problem, but there are likely to be wider issues seen
-    - USDF or Summit K8s/IT support should be responsible for fixing.
+  - USDF or Summit K8s/IT support should be responsible for fixing.

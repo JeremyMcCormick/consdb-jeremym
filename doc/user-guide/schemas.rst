@@ -13,19 +13,24 @@ Schemas
 * Schema browser
 
 * Versioning
+
 https://rubin-obs.slack.com/archives/C07QJMQ7L4A/p1730482605167509
 
 - schemas are using semantic versioning
 - should be consistent across all schemas, not just ConsDB
 
     major: backward incompatible changes to the database objects (adding a table, deleting a column)
+
         - except adding a table is not backwards incompatible
+
     minor: backward compatible changes to the database objects (adding a column)
     patch: updates or additions to semantics/metdata (units, UCDs, etc.)
+
         - changing units can create incompatibilities
 
     And we should say what should happen in the case of changes to primary/foreign keys.
     Semantic neutrality: becoming non-primary is unique and anything becoming primary was already unique
+
     - or there can be ones that are not neutral.
 
     Think about the utility of these versions in terms of interaction with the ConsDB APIs, migrations, etc.
