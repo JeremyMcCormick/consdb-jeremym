@@ -5,7 +5,7 @@
 # 1. Load the LSST environment and setup sdm_schemas and felis.
 #        source loadLSST.bash or activate your eups setup
 #        setup felis
-#        setup -r /path/to/sdm_schemas -- SDM_SCHEMAS_DIR could hopefully just work
+#        setup -r /path/to/sdm_schemas -- SDM_SCHEMAS_DIR should work
 # 2. From the root of the consdb git repo, invoke the script. Supply a
 #    revision message as the command line argument:
 #        python alembic-autogenerate.py this is my revision message "\n" \
@@ -20,11 +20,11 @@ import os
 import re
 import sys
 
-from alembic.config import Config
-from alembic import command
+from felis.tests.postgresql import setup_postgres_test_db
 from sqlalchemy.sql import text
 
-from felis.tests.postgresql import setup_postgres_test_db
+from alembic import command
+from alembic.config import Config
 
 if len(sys.argv) <= 1:
     print(

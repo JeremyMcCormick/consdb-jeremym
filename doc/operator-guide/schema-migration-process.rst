@@ -71,7 +71,7 @@ Schema Migration Process
 
 
   - If tests are successful, create a pull request for the Alembic migration in `consdb`. Tag the release according to `standards-practices` guidelines.
-  - Update your existing phalanx branch to point the environment based deployments to this consdb tag. You are able to retest on the test stand at this point, hopefully there were no changes to your consdb pull request so this step is trivial. 
+  - Update your existing phalanx branch to point the environment based deployments to this consdb tag. You are able to retest on the test stand at this point, hopefully there were no changes to your consdb pull request so this step is trivial.
 
 * Deploy migration in synchrony at Summit (if necessary), USDF, and Prompt Release (if necessary)
 
