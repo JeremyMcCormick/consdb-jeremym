@@ -45,6 +45,13 @@ jobs:
           fi
           echo "Using sdm_schemas branch: ${{ env.BRANCH_NAME }}"
 
+      - name: Check branch name
+        run: |
+          if [[ ! "${{ env.BRANCH_NAME }}" =~ ^tickets/DM-[0-9]+$ ]]; then
+            echo "Error: Migrations are only generated for sdm_schemas ticket branches matching the pattern 'tickets/DM-[number]'." >&2
+            exit 1
+          fi
+
       - name: Checkout sdm_schemas repo
         uses: actions/checkout@v2
         with:
@@ -57,10 +64,15 @@ jobs:
         run: |
           echo "SDM_SCHEMAS_DIR=${GITHUB_WORKSPACE}/sdm_schemas" >> $GITHUB_ENV
 
+      - name: Set ticket name
+        run: |
+          TICKET_NAME=$(echo ${{ env.BRANCH_NAME }} | sed 's/tickets\///')
+          echo "TICKET_NAME=${TICKET_NAME}" >> $GITHUB_ENV
+
       - name: Run migration script
         run: |
           cd $GITHUB_WORKSPACE/consdb
-          python alembic-autogenerate.py ${{ env.BRANCH_NAME.replace('tickets/', '') }}
+          python alembic-autogenerate.py ${{ env.TICKET_NAME }}
 
       - name: Commit migration changes
         run: |
@@ -69,14 +81,14 @@ jobs:
           git config --global user.email "jeremym@slac.stanford.edu"
           git config --global user.name "Jeremy McCormick"
           git add .
-          git commit -m "Migrate schema changes from ${{ env.BRANCH_NAME.replace('tickets/', '') }}"
+          git commit -m "Migrate schema changes from ${{ env.TICKET_NAME }}"
           git push https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}.git HEAD:${{ env.BRANCH_NAME }}-migrate
 
       - name: Create PR for migration
         uses: peter-evans/create-pull-request@v3
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
-          title: "Migrate schema changes from ${{ env.BRANCH_NAME.replace('tickets/', '') }}"
-          body: "This PR migrates schema changes from ${{ env.BRANCH_NAME.replace('tickets/', '') }} to the database."
+          title: "Migrate schema changes from ${{ env.TICKET_NAME }}"
+          body: "This PR migrates schema changes from ${{ env.TICKET_NAME }} to the database."
           branch: ${{ env.BRANCH_NAME }}-migrate
           base: main
