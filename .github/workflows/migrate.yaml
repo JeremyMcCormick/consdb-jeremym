@@ -21,7 +21,6 @@ jobs:
         uses: actions/checkout@v2
         with:
           path: consdb
-          fetch-depth: 0
 
       - name: Setup python
         uses: actions/setup-python@v2
@@ -58,7 +57,6 @@ jobs:
           repository: lsst/sdm_schemas
           ref: ${{ github.event.inputs.commit_sha }}
           path: sdm_schemas
-          fetch-depth: 0
 
       - name: Set sdm_schemas path in environment
         run: |
@@ -82,7 +80,7 @@ jobs:
             exit 0
           fi
 
-      - name: Commit migration changes
+      - name: Commit generated migration scripts
         run: |
           cd $GITHUB_WORKSPACE/consdb
           git checkout -b ${{ env.BRANCH_NAME }}-migrate
