@@ -46,7 +46,7 @@ jobs:
         uses: actions/checkout@v2
         with:
           repository: lsst/sdm_schemas
-          ref: ${{ env.BRANCH_NAME }}
+          ref: refs/heads/${{ env.BRANCH_NAME }}
           path: sdm_schemas
           fetch-depth: 0
 
