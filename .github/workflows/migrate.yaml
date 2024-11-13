@@ -92,6 +92,7 @@ jobs:
       #    git push https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}.git HEAD:${{ env.BRANCH_NAME }}-migrate
 
       - name: Create PR for migration
+        id: cpr
         uses: peter-evans/create-pull-request@v3
         with:
           path: consdb
