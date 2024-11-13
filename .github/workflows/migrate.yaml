@@ -74,6 +74,14 @@ jobs:
           cd $GITHUB_WORKSPACE/consdb
           python alembic-autogenerate.py ${{ env.TICKET_NAME }}
 
+      - name: Check for changes
+        run: |
+          cd $GITHUB_WORKSPACE/consdb
+          if git diff --quiet; then
+            echo "No changes detected."
+            exit 0
+          fi
+
       - name: Commit migration changes
         run: |
           cd $GITHUB_WORKSPACE/consdb
