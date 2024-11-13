@@ -45,7 +45,7 @@ jobs:
       - name: Checkout sdm_schemas repo
         uses: actions/checkout@v2
         with:
-          repository: 'github.com/lsst/sdm_schemas'
+          repository: lsst/sdm_schemas
           ref: ${{ env.BRANCH_NAME }}
           path: sdm_schemas
           fetch-depth: 0
