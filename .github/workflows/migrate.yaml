@@ -8,6 +8,9 @@ on:
       branch_name:
         description: 'Branch name in sdm_schemas to migrate'
         required: true
+      commit_sha:
+        description: 'Commit SHA in sdm_schemas to migrate'
+        required: true
 
 jobs:
   generate-migration:
@@ -46,7 +49,7 @@ jobs:
         uses: actions/checkout@v2
         with:
           repository: lsst/sdm_schemas
-          ref: ${{ env.BRANCH_NAME }}
+          ref: ${{ github.event.inputs.commit_sha }}
           path: sdm_schemas
           fetch-depth: 0
 
@@ -57,7 +60,7 @@ jobs:
       - name: Run migration script
         run: |
           cd $GITHUB_WORKSPACE/consdb
-          python alembic-autogenerate.py ${{ env.BRANCH_NAME }}
+          python alembic-autogenerate.py ${{ env.BRANCH_NAME.replace('tickets/', '') }}
 
       - name: Commit migration changes
         run: |
@@ -66,14 +69,14 @@ jobs:
           git config --global user.email "jeremym@slac.stanford.edu"
           git config --global user.name "Jeremy McCormick"
           git add .
-          git commit -m "Migrate schema changes from ${{ env.BRANCH_NAME }}"
+          git commit -m "Migrate schema changes from ${{ env.BRANCH_NAME.replace('tickets/', '') }}"
           git push https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}.git HEAD:${{ env.BRANCH_NAME }}-migrate
 
       - name: Create PR for migration
         uses: peter-evans/create-pull-request@v3
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
-          title: "Migrate schema changes from ${{ env.BRANCH_NAME }}"
-          body: "This PR migrates schema changes from ${{ env.BRANCH_NAME }} to the database."
+          title: "Migrate schema changes from ${{ env.BRANCH_NAME.replace('tickets/', '') }}"
+          body: "This PR migrates schema changes from ${{ env.BRANCH_NAME.replace('tickets/', '') }} to the database."
           branch: ${{ env.BRANCH_NAME }}-migrate
           base: main
