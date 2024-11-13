@@ -104,3 +104,9 @@ jobs:
             - [ ] Verified the automatically generated migration scripts
           branch: ${{ env.BRANCH_NAME }}-migrate
           base: main
+
+      - name: Check PR outputs
+        if: ${{ steps.cpr.outputs.pull-request-number }}
+        run: |
+          echo "Pull Request Number - ${{ steps.cpr.outputs.pull-request-number }}"
+          echo "Pull Request URL - ${{ steps.cpr.outputs.pull-request-url }}"
