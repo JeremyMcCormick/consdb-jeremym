@@ -88,13 +88,14 @@ jobs:
           git config --global user.name "Jeremy McCormick"
           git add .
           git commit -m "Migrate schema changes from ${{ env.TICKET_NAME }}"
-          git push https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}.git HEAD:${{ env.BRANCH_NAME }}-migrate
+          # git push https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}.git HEAD:${{ env.BRANCH_NAME }}-migrate
 
       - name: Create PR for migration
         uses: peter-evans/create-pull-request@v3
         with:
+          path: consdb
           token: ${{ secrets.GITHUB_TOKEN }}
-          title: "Migrate schema changes from ${{ env.TICKET_NAME }}"
+          title: "${{ env.TICKET_NAME }}: Migrate schema changes"
           body: |
             This PR migrates schema changes from ${{ env.TICKET_NAME }} to the database.
 
