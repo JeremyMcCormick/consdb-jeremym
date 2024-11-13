@@ -80,15 +80,15 @@ jobs:
             exit 0
           fi
 
-      - name: Commit generated migration scripts
-        run: |
-          cd $GITHUB_WORKSPACE/consdb
-          git checkout -b ${{ env.BRANCH_NAME }}-migrate
-          git config --global user.email "jeremym@slac.stanford.edu"
-          git config --global user.name "Jeremy McCormick"
-          git add .
-          git commit -m "Migrate schema changes from ${{ env.TICKET_NAME }}"
-          # git push https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}.git HEAD:${{ env.BRANCH_NAME }}-migrate
+      #- name: Commit generated migration scripts
+      #  run: |
+      #    cd $GITHUB_WORKSPACE/consdb
+      #    git checkout -b ${{ env.BRANCH_NAME }}-migrate
+      #    git config --global user.email "jeremym@slac.stanford.edu"
+      #    git config --global user.name "Jeremy McCormick"
+      #    git add .
+      #    git commit -m "Migrate schema changes from ${{ env.TICKET_NAME }}"
+      #    git push https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}.git HEAD:${{ env.BRANCH_NAME }}-migrate
 
       - name: Create PR for migration
         uses: peter-evans/create-pull-request@v3
@@ -96,6 +96,7 @@ jobs:
           path: consdb
           token: ${{ secrets.GITHUB_TOKEN }}
           title: "${{ env.TICKET_NAME }}: Migrate schema changes"
+          commit-message: Migrate schema changes from ${{ env.TICKET_NAME }}
           body: |
             This PR migrates schema changes from ${{ env.TICKET_NAME }} to the database.
 
@@ -104,6 +105,8 @@ jobs:
             - [ ] Verified the automatically generated migration scripts
           branch: ${{ env.BRANCH_NAME }}-migrate
           base: main
+          draft: true
+          labels: migration
 
       - name: Check PR outputs
         if: ${{ steps.cpr.outputs.pull-request-number }}
