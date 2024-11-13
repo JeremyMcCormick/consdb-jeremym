@@ -18,7 +18,7 @@ jobs:
 
     steps:
       - name: Checkout consdb repo
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
         with:
           path: consdb
           fetch-depth: 0
@@ -53,7 +53,7 @@ jobs:
           fi
 
       - name: Checkout sdm_schemas repo
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
         with:
           repository: lsst/sdm_schemas
           ref: ${{ github.event.inputs.commit_sha }}
