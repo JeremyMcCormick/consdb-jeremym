@@ -46,13 +46,9 @@ jobs:
         uses: actions/checkout@v2
         with:
           repository: lsst/sdm_schemas
+          ref: ${{ env.BRANCH_NAME }}
           path: sdm_schemas
           fetch-depth: 0
-
-      - name: Checkout sdm_schemas branch
-        run: |
-          cd $GITHUB_WORKSPACE/sdm_schemas
-          git checkout ${{ env.BRANCH_NAME }}
 
       - name: Set sdm_schemas path in environment
         run: |
